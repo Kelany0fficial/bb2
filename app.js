@@ -138,6 +138,12 @@ document.addEventListener('click', e => {
     const id = e.target.dataset.id;
     window.location.href = `product.html?id=${id}`;
   }
+  if (e.target.classList.contains('remove-fav-btn')) {
+    const id = e.target.dataset.id;
+    store.toggleFavorite(id);
+    showToast('أزيل من المفضلة');
+    loadFavorites();
+  }
 });
 
 // Load logo in all pages
@@ -160,7 +166,15 @@ async function loadFavorites() {
       noFavorites.style.display = 'block';
     } else {
       noFavorites.style.display = 'none';
-      favoriteItems.forEach(item => grid.appendChild(createProductCard(item, categories)));
+      favoriteItems.forEach(item => {
+        const card = createProductCard(item, categories);
+        const favBtn = card.querySelector('.fav-btn');
+        favBtn.classList.remove('fav-btn');
+        favBtn.classList.add('remove-fav-btn');
+        favBtn.innerHTML = '<i class="fas fa-trash"></i> إزالة';
+        favBtn.title = 'إزالة من المفضلة';
+        grid.appendChild(card);
+      });
     }
   }
 }
@@ -172,7 +186,7 @@ if (document.querySelector('#featured-grid')) { // home.js
     const items = await api.load('items.json');
     const grid = document.querySelector('#featured-grid');
     const count = settings.featuredCount || 6;
-    items.slice(0, count).forEach(item => grid.appendChild(createProductCard(item)));
+    items.filter(item => item.featured).slice(0, count).forEach(item => grid.appendChild(createProductCard(item)));
 
     // Banner slider
     const slider = document.querySelector('#banner-slider');
@@ -185,12 +199,15 @@ if (document.querySelector('#featured-grid')) { // home.js
         slider.appendChild(img);
       });
       let current = 0;
+      const animations = ['fadeIn', 'slideInLeft', 'zoomIn'];
       setInterval(() => {
         const imgs = slider.querySelectorAll('img');
-        imgs[current].classList.remove('active');
+        imgs.forEach(img => {
+          img.classList.remove('active', ...animations);
+        });
         current = (current + 1) % imgs.length;
-        imgs[current].classList.add('active');
-      }, 5000); // Change every 5 seconds
+        imgs[current].classList.add('active', animations[current % animations.length]);
+      }, 2500); // Change every 2.5 seconds
     }
 
     updateStickyCart();
@@ -397,8 +414,6 @@ if (document.querySelector('#featured-grid')) { // home.js
       window.location.href = url;
       store.clearCart();
     });
-
-
 
     updateCart();
     loadLogo();
