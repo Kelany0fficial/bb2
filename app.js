@@ -83,19 +83,16 @@ function updateStickyCart() {
   }
 }
 
-function createProductCard(item, categories = null) {
+function createProductCard(item) {
   const card = document.createElement('div');
   card.classList.add('card', 'product');
   card.dataset.id = item.id;
-  let badge = '';
-  if (categories && categories.find(c => c.id === item.category)) {
-    badge = `<span class="badge">${categories.find(c => c.id === item.category).title}</span>`;
-  }
+
   card.innerHTML = `
     <div class="flex">
       <img src="${item.image}" alt="${item.name}" width="120" height="120" loading="lazy">
       <div class="ml">
-        <h3>${item.name} ${badge}</h3>
+        <h3>${item.name}</h3>
         <p class="muted">${item.desc}</p>
         <div class="price">سينجل ${egp(item.price.single)} — دابل ${egp(item.price.double)}</div>
       </div>
@@ -105,6 +102,7 @@ function createProductCard(item, categories = null) {
       <button class="add-cart-btn" data-id="${item.id}">أضف للسلة</button>
     </div>
   `;
+
   card.addEventListener('click', e => {
     if (!e.target.classList.contains('fav-btn') && !e.target.classList.contains('add-cart-btn')) {
       window.location.href = `product.html?id=${item.id}`;
@@ -112,6 +110,7 @@ function createProductCard(item, categories = null) {
   });
   return card;
 }
+
 
 // Load footer data
 async function loadFooterData() {
