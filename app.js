@@ -189,26 +189,43 @@ if (document.querySelector('#featured-grid')) { // home.js
     items.filter(item => item.featured).slice(0, count).forEach(item => grid.appendChild(createProductCard(item)));
 
     // Banner slider
-    const slider = document.querySelector('#banner-slider');
-    if (slider && settings.banners) {
-      settings.banners.forEach((src, index) => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.alt = `Banner ${index + 1}`;
-        img.classList.add(index === 0 ? 'active' : '');
-        slider.appendChild(img);
-      });
-      let current = 0;
-      const animations = ['fadeIn', 'slideInLeft', 'zoomIn'];
-      setInterval(() => {
-        const imgs = slider.querySelectorAll('img');
-        imgs.forEach(img => {
-          img.classList.remove('active', ...animations);
-        });
-        current = (current + 1) % imgs.length;
-        imgs[current].classList.add('active', animations[current % animations.length]);
-      }, 2500); // Change every 2.5 seconds
+// Banner slider
+const slider = document.querySelector('#banner-slider');
+
+if (slider && Array.isArray(settings.banners) && settings.banners.length > 0) {
+  settings.banners.forEach((src, index) => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = `Banner ${index + 1}`;
+
+    // خلي أول صورة active
+    if (index === 0) {
+      img.classList.add('active');
     }
+
+    slider.appendChild(img);
+  });
+
+  let current = 0;
+  const animations = ['fadeIn', 'slideInLeft', 'zoomIn'];
+
+  setInterval(() => {
+    const imgs = slider.querySelectorAll('img');
+
+    // شيل الكلاسات القديمة
+    imgs.forEach(img => {
+      img.classList.remove('active', ...animations);
+    });
+
+    // عدّل الـ index
+    current = (current + 1) % imgs.length;
+
+    // ضيف الكلاسات الجديدة
+    imgs[current].classList.add('active', animations[current % animations.length]);
+
+  }, 2500); // كل 2.5 ثانية
+}
+
 
     updateStickyCart();
     window.addEventListener('storage', updateStickyCart);
