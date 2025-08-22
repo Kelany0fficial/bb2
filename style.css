@@ -386,3 +386,35 @@ body {
     max-height: 200px;
   }
 }
+/* فلتر المنيو */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.filters .btn {
+  background: transparent;
+  border: 1px solid var(--brand);
+  color: var(--brand);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+}
+
+.filters .btn:hover {
+  background: var(--brand);
+  color: #111;
+}
+
+.filters .btn.active {
+  background: var(--brand);
+  color: #111;
+  border-color: var(--brand);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
